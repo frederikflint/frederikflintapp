@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div>
-      <h1 class="title">frederikflint.com</h1>
+      <h1 class="text-base text-4xl sm:text-6xl">frederikflint.com</h1>
       <h3>Velkommen til min hjemmeside</h3>
       <p>Den kan ikke en skid</p>
     </div>

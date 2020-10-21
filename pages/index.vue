@@ -1,10 +1,16 @@
 <template>
   <div class="container">
-    <div>
+    <div v-if="!isBirthday">
       <h1 class="title text-base text-4xl sm:text-6xl">
         Tid til min fødselsdag
       </h1>
       <div class="justify-items-center">
+        <div
+          class="bg-green-900 m-8 time-box block md:inline-block rounded-lg text-white"
+        >
+          <p>{{ months }}</p>
+          <p>months</p>
+        </div>
         <div
           class="bg-green-900 m-8 time-box block md:inline-block rounded-lg text-white"
         >
@@ -31,21 +37,30 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <h1 class="title text-base text-4xl sm:text-6xl">
+        Det er min fødselsdag
+      </h1>
+      <h1 class="title text-base text-4xl sm:text-6xl">HURRA!!</h1>
+    </div>
   </div>
 </template>
 
 <script>
+const countdown = require('countdown')
 export default {
   data() {
     return {
       birthDay: {
         day: 22,
-        month: 4,
+        month: 3,
       },
       seconds: 60,
       minutes: 60,
       hours: 24,
-      days: 999,
+      days: 30,
+      months: 12,
+      isBirthday: false,
     }
   },
   mounted() {
@@ -57,36 +72,32 @@ export default {
       const { day: birthDay, month: birthMonth } = this.birthDay
 
       const currentDate = new Date()
-      const currentMonth = currentDate.getMonth()
-
       let year = currentDate.getFullYear()
 
       // Check if we are past birthday this year
       if (
-        currentMonth > birthMonth ||
-        (currentMonth === birthMonth && currentDate.getDay() > birthDay)
+        currentDate.getMonth() > birthMonth ||
+        (currentDate.getMonth() === birthMonth &&
+          currentDate.getDate() > birthDay)
       ) {
         year += 1
       }
 
-      const birthDate = new Date(year, birthMonth, birthDay)
+      const birthDate = new Date(year, this.birthDay.month, this.birthDay.day)
 
-      const totalSecondsToBirthday = (birthDate - currentDate) / 1000
+      const timespan = countdown(currentDate, birthDate)
 
-      this.days = Math.floor(totalSecondsToBirthday / (60 * 60 * 24))
-      this.hours = Math.floor(
-        (totalSecondsToBirthday - this.days * 60 * 60 * 24) / (60 * 60)
-      )
-      this.minutes = Math.floor(
-        (totalSecondsToBirthday -
-          (this.hours * 60 * 60 + this.days * 60 * 60 * 24)) /
-          60
-      )
+      if (timespan.months === 0 && timespan.days === 0) {
+        this.isBirthday = true
 
-      this.seconds = Math.floor(
-        totalSecondsToBirthday -
-          (this.minutes * 60 + this.hours * 60 * 60 + this.days * 60 * 60 * 24)
-      )
+        return
+      }
+
+      this.months = timespan.months
+      this.days = timespan.days
+      this.hours = timespan.hours
+      this.minutes = timespan.minutes
+      this.seconds = timespan.seconds
     },
   },
 }

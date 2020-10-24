@@ -2,7 +2,7 @@
   <div class="container">
     <div v-if="!isBirthday">
       <h1 class="title text-base text-4xl sm:text-6xl">
-        Tid til min fødselsdag
+        Time until my birthday
       </h1>
       <div class="justify-items-center">
         <div
@@ -38,10 +38,8 @@
       </div>
     </div>
     <div v-else>
-      <h1 class="title text-base text-4xl sm:text-6xl">
-        Det er min fødselsdag
-      </h1>
-      <h1 class="title text-base text-4xl sm:text-6xl">HURRA!!</h1>
+      <h1 class="title text-base text-4xl sm:text-6xl">It's my birthday!</h1>
+      <h1 class="title text-base text-4xl sm:text-6xl">HURRAY!!!</h1>
     </div>
   </div>
 </template>

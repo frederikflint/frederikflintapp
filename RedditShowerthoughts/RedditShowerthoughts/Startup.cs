@@ -15,6 +15,7 @@ namespace RedditShowerthoughts
 {
   public class Startup
   {
+    readonly string MyAllowCors = "_myAllowCors";
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
@@ -25,6 +26,16 @@ namespace RedditShowerthoughts
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddCors(options =>
+      {
+        options.AddPolicy(name: MyAllowCors, builder =>
+        {
+          builder.AllowAnyHeader();
+          builder.AllowAnyMethod();
+          builder.AllowAnyOrigin();
+        });
+      });
+
       services.AddHttpClient();
 
       services.AddControllers();
@@ -37,6 +48,8 @@ namespace RedditShowerthoughts
       {
         app.UseDeveloperExceptionPage();
       }
+
+      app.UseCors(MyAllowCors);
 
       app.UseHttpsRedirection();
 

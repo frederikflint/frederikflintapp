@@ -10,8 +10,8 @@ using Microsoft.Extensions.Logging;
 namespace RedditShowerthoughts.Controllers
 {
   [ApiController]
-  [Route("[controller]")]
-  public class WeatherForecastController : ControllerBase
+  [Route("api/[controller]")]
+  public class ShowerthoughtsController : ControllerBase
   {
     private readonly IHttpClientFactory _clientFactory;
     private static readonly string[] Summaries = new[]
@@ -19,9 +19,9 @@ namespace RedditShowerthoughts.Controllers
       "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    private readonly ILogger<WeatherForecastController> _logger;
+    private readonly ILogger<ShowerthoughtsController> _logger;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, IHttpClientFactory clientFactory)
+    public ShowerthoughtsController(ILogger<ShowerthoughtsController> logger, IHttpClientFactory clientFactory)
     {
       _clientFactory = clientFactory;
       _logger = logger;

@@ -4,6 +4,10 @@ services:
     image: frontend
     build: ./frederikflintcom
 
+  backend:
+    image: backend
+    build: ./RedditShowerthoughts/RedditShowerthoughts
+
 
   proxy:
     image: proxy

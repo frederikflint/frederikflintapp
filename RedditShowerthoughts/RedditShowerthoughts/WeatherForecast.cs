@@ -1,15 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace RedditShowerthoughts
 {
-    public class WeatherForecast
+    public class RedditPostResponse
     {
-        public DateTime Date { get; set; }
+      [JsonPropertyName("data")]
+      public RedditPostResponseData Data { get; set; }
+    }
 
-        public int TemperatureC { get; set; }
+    public class RedditPostResponseData
+    {
+      [JsonPropertyName("children")]
+      public IEnumerable<RedditPostData> Children { get; set; }
 
-        public int TemperatureF => 32 + (int) (TemperatureC / 0.5556);
+    }
 
-        public string Summary { get; set; }
+    public class RedditPostData
+    {
+      [JsonPropertyName("data")]
+      public RedditPost Data { get; set; }
+    }
+
+    public class RedditPost
+    {
+      [JsonPropertyName("title")]
+      public string Title { get; set; }
     }
 }

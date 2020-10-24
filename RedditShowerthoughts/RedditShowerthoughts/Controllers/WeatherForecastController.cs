@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,12 +28,22 @@ namespace RedditShowerthoughts.Controllers
     }
 
     [HttpGet]
-    public async Task<IEnumerable<WeatherForecast>> Get()
+    public async Task<IActionResult> Get()
     {
       var client = _clientFactory.CreateClient();
-      var data = await client.GetAsync("http://www.reddit.com/r/showerthoughts/random.json");
-      Console.WriteLine(data);
+      var response = await client.GetAsync("http://www.reddit.com/r/showerthoughts/random.json");
 
+      if (response.IsSuccessStatusCode)
+      {
+        var responseString = await response.Content.ReadAsStringAsync();
+        var post = JsonSerializer.Deserialize<IEnumerable<RedditPostResponse>>(responseString).ToList();
+
+        return Ok(post[0].Data.Children.ToList()[0].Data.Title);
+      }
+      else
+      {
+        return StatusCode(500);
+      }
     }
   }
 }

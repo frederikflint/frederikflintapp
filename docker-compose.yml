@@ -8,14 +8,24 @@ services:
     image: backend
     build: ./RedditShowerthoughts/RedditShowerthoughts
 
-
   proxy:
     image: proxy
     build: ./proxy
     ports:
+        - "443:443"
         - "80:80"
     depends_on:
       - frontend
+    volumes:
+    - ./data/certbot/conf:/etc/letsencrypt
+    - ./data/certbot/www:/var/www/certbot
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
       
 volumes:
   dbdata:

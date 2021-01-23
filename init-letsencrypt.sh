@@ -8,7 +8,7 @@ fi
 domains=(frederikflint.com)
 rsa_key_size=4096
 data_path="./data/certbot"
-email="frederikflint@gmail.com" # Adding a valid address is strongly recommended
+email="" # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
@@ -39,7 +39,7 @@ echo
 
 
 echo "### Starting nginx ..."
-docker-compose up --force-recreate -d proxy
+docker-compose up --force-recreate -d nginx
 echo
 
 echo "### Deleting dummy certificate for $domains ..."
@@ -77,4 +77,4 @@ docker-compose run --rm --entrypoint "\
 echo
 
 echo "### Reloading nginx ..."
-docker-compose exec proxy nginx -s reload
+docker-compose exec nginx nginx -s reload

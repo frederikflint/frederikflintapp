@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.4
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true
+    ports:
+      # The HTTP port
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
+
+  nba-frontend:
+    image: frederikflint/nba:frontend
+    labels:
+      - traefik.http.routers.nba-frontend.rule=Host(`nba.frederikflint.com`)
+      - traefik.http.routers.nba-frontend.tls=true
+      - traefik.http.routers.nba-frontend.tls.certresolver=myresolver
+
+  nba-backend:
+    image: frederikflint/nba:backend
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+    labels:
+      - traefik.http.routers.nba-backend.rule=Host(`nba.frederikflint.com`) && PathPrefix(`/api/`)
+      - traefik.http.routers.nba-backend.tls=true
+      - traefik.http.routers.nba-backend.tls.certresolver=myresolver
+
+  frederikflintcom-frontend:
+    image: frederikflint/frederikflintcom:frontend
+    labels:
+      - traefik.http.routers.frederikflintcom-frontend.rule=Host(`frederikflint.com`)
+      - traefik.http.routers.frederikflintcom-frontend.tls=true
+      - traefik.http.routers.frederikflintcom-frontend.tls.certresolver=myresolver
+
+  frederikflintcom-backend:
+    image: frederikflint/frederikflintcom:backend
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+    labels:
+      - traefik.http.routers.frederikflintcom-backend.rule=Host(`frederikflint.com`) && PathPrefix(`/api/`)
+      - traefik.http.routers.frederikflintcom-backend.tls=true
+      - traefik.http.routers.frederikflintcom-backend.tls.certresolver=myresolver
+
+  bentmadsen:
+    image: frederikflint/bentmadsen:web
+    labels:
+      - traefik.http.routers.bentmadsen.rule=Host(`bentmadsen.frederikflint.com`)
+      - traefik.http.routers.bentmadsen.tls=true
+      - traefik.http.routers.bentmadsen.tls.certresolver=myresolver
